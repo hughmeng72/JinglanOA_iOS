@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>DLRadioButton.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Gloss.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -17,12 +22,17 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>0567050A4D6D9F2B8A8DD36B8417E588</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>39C69D9B6A709F788E7F5A5E2BDCF612</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>8C5CCD93BFE7446CCFB5A96BABECCDAC</key>
+		<key>F6A77E2753C279F67F70C5C21D6FAE15</key>
 		<dict>
 			<key>primary</key>
 			<true/>

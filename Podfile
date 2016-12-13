@@ -7,6 +7,7 @@ target 'PerkingOpera' do
 
   # Pods for PerkingOpera
 pod 'Gloss', '~> 1.1'
+pod 'DLRadioButton', '~> 1.4'
 
 
 end
