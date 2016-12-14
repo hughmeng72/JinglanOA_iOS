@@ -498,7 +498,7 @@
         <!--Review View Controller-->
         <scene sceneID="qwM-Tb-CFH">
             <objects>
-                <viewController id="EYp-8x-4g5" customClass="ReviewViewController" customModule="PerkingOpera" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="reviewController" id="EYp-8x-4g5" customClass="ReviewViewController" customModule="PerkingOpera" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="QUd-gd-5EI"/>
                         <viewControllerLayoutGuide type="bottom" id="uGp-ai-SZu"/>
@@ -518,6 +518,10 @@
                                                 <state key="normal" title="Agree">
                                                     <color key="titleColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </state>
+                                                <connections>
+                                                    <outletCollection property="otherButtons" destination="OQv-ND-H03" id="zvS-Tn-0B1"/>
+                                                    <outletCollection property="otherButtons" destination="xX6-r4-GV3" id="WTp-Dk-gW4"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OQv-ND-H03" customClass="DLRadioButton">
                                                 <rect key="frame" x="106.5" y="0.0" width="107" height="34"/>
@@ -560,6 +564,9 @@
                             <constraint firstItem="uGp-ai-SZu" firstAttribute="top" secondItem="rDF-2n-oWf" secondAttribute="bottom" id="svp-q1-pyu"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="reviewButton" destination="xX6-r4-GV3" id="dgV-o5-QMe"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="M1f-gm-89R" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -594,7 +601,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yyu-f2-0Vn">
-                                            <rect key="frame" x="128" y="29" width="31" height="15"/>
+                                            <rect key="frame" x="128.5" y="29" width="31" height="15"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -677,7 +684,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Zv-IU-EE6">
-                                            <rect key="frame" x="128" y="29" width="31" height="15"/>
+                                            <rect key="frame" x="128.5" y="29" width="31" height="15"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -760,7 +767,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wg0-WZ-61q">
-                                            <rect key="frame" x="128" y="28.5" width="31" height="15"/>
+                                            <rect key="frame" x="128.5" y="28.5" width="31" height="15"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -1537,7 +1544,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ti4-8Y-8dT">
-                                            <rect key="frame" x="128" y="29" width="31" height="15"/>
+                                            <rect key="frame" x="128.5" y="29" width="31" height="15"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -1686,7 +1693,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="00y-7J-PBU">
-                                            <rect key="frame" x="128" y="44.5" width="31" height="15"/>
+                                            <rect key="frame" x="128.5" y="44.5" width="31" height="15"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>

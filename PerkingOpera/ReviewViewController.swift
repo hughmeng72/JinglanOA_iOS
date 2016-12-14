@@ -7,15 +7,17 @@
 //
 
 import UIKit
+import DLRadioButton
 
 class ReviewViewController: UIViewController {
-
+    
+    @IBOutlet var reviewButton: DLRadioButton!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        self.reviewButton.isMultipleSelectionEnabled = false
     }
 
 }

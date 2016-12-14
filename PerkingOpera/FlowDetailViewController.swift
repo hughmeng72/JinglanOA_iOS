@@ -81,7 +81,10 @@ class FlowDetailViewController: UITableViewController, XMLParserDelegate {
     
     
     @IBAction func review(_ sender: Any) {
-        let reviewVC = ReviewViewController()
+//        let reviewVC = ReviewViewController()
+//        reviewVC.view.frame = (UIApplication.shared.keyWindow?.bounds)!
+
+        let reviewVC = self.storyboard?.instantiateViewController(withIdentifier: "reviewController") as! ReviewViewController
         
         self.present(reviewVC, animated: true, completion: { () -> Void in
             print("show ReviewVC...")
