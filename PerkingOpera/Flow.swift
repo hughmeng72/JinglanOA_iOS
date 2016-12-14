@@ -18,7 +18,7 @@ struct Flow: Glossy {
     let currentStepName: String
     let status: Int
     let depName: String
-    let remark: String
+    var remark: String
     let currentDocPath: String?
     let flowFiles: String?
     let docBody: String?

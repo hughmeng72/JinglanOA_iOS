@@ -14,6 +14,7 @@ class FlowDetailViewController: UITableViewController, XMLParserDelegate {
     var itemId: Int!
     
     private let soapMethod = "GetFlowDetail"
+    private let soapMethodAgreed = "SubmitFlowRequest"
     
     private var elementValue: String?
     
@@ -23,6 +24,9 @@ class FlowDetailViewController: UITableViewController, XMLParserDelegate {
     
     private var attachments = [FlowDoc]()
     
+    private var reviewResult: ResponseBase?
+
+    var submitHandler: ((FlowDetailViewController?) -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,65 +34,30 @@ class FlowDetailViewController: UITableViewController, XMLParserDelegate {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 48
         
-        guard let user = Repository.sharedInstance.user
-            else {
-                print("Failed to get user object")
-                return
-        }
-        
-        let parameters = "<token>\(user.token)</token>"
-            + "<flowId>\(itemId!)</flowId>"
-        
-        let request = SoapHelper.getURLRequest(method: soapMethod, parameters: parameters)
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data, error == nil else {
-                print("network error: \(error)")
-                return
-            }
-            
-            let parser = XMLParser(data: data)
-            parser.delegate = self
-            guard parser.parse() else {
-                print("parsing error: \(parser.parserError)")
-                return
-            }
-            
-            // if we've gotten here, update the UI
-            DispatchQueue.main.async {
-                if self.item == nil {
-                    let controller = UIAlertController(
-                        title: "没有检索到相关数据",
-                        message: "", preferredStyle: .alert)
-                    
-                    let cancelAction = UIAlertAction(
-                        title: "Ok",
-                        style: .cancel, handler: nil)
-                    
-                    controller.addAction(cancelAction)
-                    
-                    self.present(controller, animated: true, completion: nil)
-                    
-                    return
-                }
-                
-                self.tableView.reloadData()
-            }
-        }
-        
-        task.resume()
+        load()
     }
-    
-    
+
     @IBAction func review(_ sender: Any) {
-//        let reviewVC = ReviewViewController()
-//        reviewVC.view.frame = (UIApplication.shared.keyWindow?.bounds)!
 
         let reviewVC = self.storyboard?.instantiateViewController(withIdentifier: "reviewController") as! ReviewViewController
         
-        self.present(reviewVC, animated: true, completion: { () -> Void in
-            print("show ReviewVC...")
-        })
+        reviewVC.flow = item
+        
+        reviewVC.submitHandler = {
+            (controller) in
+            
+            print("Gonna dismiss Review controller")
+            
+            let words = controller?.wordsTextView.text
+            
+            controller?.dismiss(animated: true, completion: nil)
+            
+            self.sumbit(reviewWords: words!)
+        }
+
+        print("Remark in item: \(self.item?.remark)")
+        
+        self.present(reviewVC, animated: true, completion: nil)
     }
     
     
@@ -112,7 +81,6 @@ class FlowDetailViewController: UITableViewController, XMLParserDelegate {
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
-    
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
@@ -198,11 +166,123 @@ class FlowDetailViewController: UITableViewController, XMLParserDelegate {
             return cell
         }
     }
+
+    // MARK: - Load Flow detail information
     
-    // MARK: - XML Parser
+    func load() {
+        guard let user = Repository.sharedInstance.user
+            else {
+                print("Failed to get user object")
+                return
+        }
+        
+        let parameters = "<token>\(user.token)</token>"
+            + "<flowId>\(itemId!)</flowId>"
+        
+        let request = SoapHelper.getURLRequest(method: soapMethod, parameters: parameters)
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print("network error: \(error)")
+                return
+            }
+            
+            let parser = XMLParser(data: data)
+            parser.delegate = self
+            guard parser.parse() else {
+                print("parsing error: \(parser.parserError)")
+                return
+            }
+            
+            // if we've gotten here, update the UI
+            DispatchQueue.main.async {
+                if self.item == nil {
+                    let controller = UIAlertController(
+                        title: "没有检索到相关数据",
+                        message: "", preferredStyle: .alert)
+                    
+                    let cancelAction = UIAlertAction(
+                        title: "Ok",
+                        style: .cancel, handler: nil)
+                    
+                    controller.addAction(cancelAction)
+                    
+                    self.present(controller, animated: true, completion: nil)
+                    
+                    return
+                }
+                
+                self.tableView.reloadData()
+            }
+        }
+        
+        task.resume()
+    }
+    
+    func sumbit(reviewWords: String) {
+        
+        guard let user = Repository.sharedInstance.user
+            else {
+                print("Failed to get user object")
+                return
+        }
+        
+        let parameters = "<token>\(user.token)</token>"
+            + "<id>\(self.item!.id)</id>"
+            + "<words>\(reviewWords)</words>"
+            + "<depName>\(self.item!.depName)</depName>"
+            + "<docBody>\(self.item!.docBody)</docBody>"
+            + "<currentDocPath>\(self.item!.currentDocPath)</currentDocPath>"
+            + "<flowFiles>\(self.item!.flowFiles)</flowFiles>"
+        
+        let request = SoapHelper.getURLRequest(method: soapMethodAgreed, parameters: parameters)
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print("network error: \(error)")
+                return
+            }
+            
+            let parser = XMLParser(data: data)
+            parser.delegate = self
+            guard parser.parse() else {
+                print("parsing error: \(parser.parserError)")
+                return
+            }
+            
+            // if we've gotten here, update the UI
+            DispatchQueue.main.async {
+                
+                if let result = self.reviewResult {
+                    if result.result != 1 {
+                        let controller = UIAlertController(
+                            title: "操作失败，稍后请重试。如果问题依然存在，请联系管理员。",
+                            message: "", preferredStyle: .alert)
+                        
+                        let cancelAction = UIAlertAction(
+                            title: "Ok",
+                            style: .cancel, handler: nil)
+                        
+                        controller.addAction(cancelAction)
+                        
+                        self.present(controller, animated: true, completion: nil)
+                        
+                        return
+                    }
+                    
+                    self.submitHandler!(self)
+                }
+            }
+        }
+        
+        task.resume()
+    }
+    
+    
+    // MARK: - XML Parser for Flow Detail
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
-        if elementName == "\(soapMethod)Result" {
+        if elementName == "\(soapMethod)Result" || elementName == "\(soapMethodAgreed)Result" {
             elementValue = ""
         }
     }
@@ -232,6 +312,21 @@ class FlowDetailViewController: UITableViewController, XMLParserDelegate {
             if let s = self.item?.steps {
                 self.steps = s
             }
+            
+            elementValue = nil;
+        }
+        else if elementName == "\(soapMethodAgreed)Result" {
+            print(elementValue ?? "Not got any data from ws.")
+            
+            let result = convertStringToDictionary(text: elementValue!)
+            print(result ?? "Not got any data from ws.")
+            
+            guard let resultObject = ResponseBase(json: result!) else {
+                print("DECODING FAILURE :(")
+                return
+            }
+            
+            self.reviewResult = resultObject
             
             elementValue = nil;
         }

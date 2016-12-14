@@ -73,8 +73,10 @@ class FlowToDoTableViewController: UITableViewController, XMLParserDelegate {
         task.resume()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.tableView.reloadData()
     }
 
     
@@ -107,6 +109,24 @@ class FlowToDoTableViewController: UITableViewController, XMLParserDelegate {
                 let controller = segue.destination as! FlowDetailViewController
                 
                 controller.itemId = item.id
+                
+                controller.submitHandler = {
+                    (controller) in
+                    
+                    print("Gonna dismiss Flow detail controller")
+                    
+                    if let flowId = controller?.itemId {
+                        if let index = self.list.index(where: {
+                            (item) -> Bool in
+                            
+                            item.id == flowId
+                        }) {
+                            self.list.remove(at: index)
+
+                            self.navigationController!.popToViewController(self, animated: true)
+                        }
+                    }
+                }
             }
         }
     }
