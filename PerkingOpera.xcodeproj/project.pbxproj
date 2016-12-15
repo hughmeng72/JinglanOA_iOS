@@ -17,6 +17,8 @@
 		841F4E1E1DEDCCE1009032FB /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841F4E1D1DEDCCE1009032FB /* MainViewController.swift */; };
 		841F4E201DEDD275009032FB /* RoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841F4E1F1DEDD275009032FB /* RoundButton.swift */; };
 		841F7F801DF19823007D6F1C /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841F7F7F1DF19823007D6F1C /* ItemCell.swift */; };
+		84207E9C1E02B58B002AC87F /* ManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84207E9B1E02B58B002AC87F /* ManagerViewController.swift */; };
+		84207E9E1E02C7E0002AC87F /* Employee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84207E9D1E02C7E0002AC87F /* Employee.swift */; };
 		843D65051DF277CA00798F50 /* FlowToDoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843D65041DF277CA00798F50 /* FlowToDoTableViewController.swift */; };
 		843D65071DF279E300798F50 /* Item2Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843D65061DF279E300798F50 /* Item2Cell.swift */; };
 		84854C421DF47DAC00B0F744 /* FlowDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84854C411DF47DAC00B0F744 /* FlowDetailViewController.swift */; };
@@ -75,6 +77,8 @@
 		841F4E1D1DEDCCE1009032FB /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		841F4E1F1DEDD275009032FB /* RoundButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundButton.swift; sourceTree = "<group>"; };
 		841F7F7F1DF19823007D6F1C /* ItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
+		84207E9B1E02B58B002AC87F /* ManagerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagerViewController.swift; sourceTree = "<group>"; };
+		84207E9D1E02C7E0002AC87F /* Employee.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Employee.swift; sourceTree = "<group>"; };
 		843D65041DF277CA00798F50 /* FlowToDoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowToDoTableViewController.swift; sourceTree = "<group>"; };
 		843D65061DF279E300798F50 /* Item2Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item2Cell.swift; sourceTree = "<group>"; };
 		84854C411DF47DAC00B0F744 /* FlowDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowDetailViewController.swift; sourceTree = "<group>"; };
@@ -140,6 +144,7 @@
 				84A9DFF61DF0799E00E576D3 /* FlowDoc.swift */,
 				84A9DFFC1DF09DA100E576D3 /* ResponseResultList.swift */,
 				84A5A7C81DF4184D00903189 /* ResponseResult.swift */,
+				84207E9D1E02C7E0002AC87F /* Employee.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -176,6 +181,7 @@
 				84A5D8F41DFCC9B900E6CDDA /* CalendarDetailViewController.swift */,
 				84A5D8F61DFCE08A00E6CDDA /* PlanDetailViewController.swift */,
 				84FC1F2E1E013548002BEB89 /* ReviewViewController.swift */,
+				84207E9B1E02B58B002AC87F /* ManagerViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -396,8 +402,10 @@
 				84C2D8611DF1F161000EAD22 /* FlowStep.swift in Sources */,
 				84BDDD191DEB3D8B0075ECAB /* AppDelegate.swift in Sources */,
 				84B2360A1DF33F3100886E50 /* WebViewController.swift in Sources */,
+				84207E9C1E02B58B002AC87F /* ManagerViewController.swift in Sources */,
 				843D65051DF277CA00798F50 /* FlowToDoTableViewController.swift in Sources */,
 				84A9DFF91DF0831C00E576D3 /* Repository.swift in Sources */,
+				84207E9E1E02C7E0002AC87F /* Employee.swift in Sources */,
 				84A9DFFB1DF08D3D00E576D3 /* SoapHelper.swift in Sources */,
 				84C2D8631DF1F422000EAD22 /* FlowProcurement.swift in Sources */,
 				84A9DFFD1DF09DA100E576D3 /* ResponseResultList.swift in Sources */,
