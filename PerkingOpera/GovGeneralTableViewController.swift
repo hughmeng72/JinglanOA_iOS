@@ -78,10 +78,6 @@ class GovGeneralTableViewController: UITableViewController, XMLParserDelegate {
         task.resume()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
     
     // MARK: - Table view data source
     

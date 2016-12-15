@@ -1,5 +1,5 @@
 //
-//  RequestToDoTableViewController.swift
+//  GovToDoTableViewController.swift
 //  PerkingOpera
 //
 //  Created by admin on 03/12/2016.
@@ -23,6 +23,11 @@ class GovToDoTableViewController: UITableViewController, XMLParserDelegate {
         
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 48
+        
+        load()
+    }
+    
+    func load() {
         
         guard let user = Repository.sharedInstance.user
             else {
@@ -72,9 +77,12 @@ class GovToDoTableViewController: UITableViewController, XMLParserDelegate {
         
         task.resume()
     }
+
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.tableView.reloadData()
     }
     
     
@@ -107,6 +115,24 @@ class GovToDoTableViewController: UITableViewController, XMLParserDelegate {
                 let controller = segue.destination as! GovDetailViewController
                 
                 controller.itemId = item.id
+                
+                controller.submitHandler = {
+                    (controller) in
+                    
+                    print("Gonna dismiss Gov detail controller")
+                    
+                    if let flowId = controller?.itemId {
+                        if let index = self.list.index(where: {
+                            (item) -> Bool in
+                            
+                            item.id == flowId
+                        }) {
+                            self.list.remove(at: index)
+                            
+                            self.navigationController!.popToViewController(self, animated: true)
+                        }
+                    }
+                }
             }
         }
     }

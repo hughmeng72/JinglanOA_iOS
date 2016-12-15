@@ -14,6 +14,8 @@ class GovDetailViewController: UITableViewController, XMLParserDelegate {
     var itemId: Int!
     
     private let soapMethod = "GetGovDetail"
+    private let soapMethodAgreed = "SubmitGovRequest"
+    private let soapMethodFinalized = "FinalizeGovRequest"
     
     private var elementValue: String?
     
@@ -23,12 +25,21 @@ class GovDetailViewController: UITableViewController, XMLParserDelegate {
     
     private var attachments = [FlowDoc]()
     
+    private var reviewResult: ResponseBase?
+    
+    var submitHandler: ((GovDetailViewController?) -> Void)?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 64
+        
+        load()
+    }
+    
+    func load() {
         
         guard let user = Repository.sharedInstance.user
             else {
@@ -72,6 +83,10 @@ class GovDetailViewController: UITableViewController, XMLParserDelegate {
                     return
                 }
                 
+                if (!self.item!.approvalAuthorized) {
+                    self.navigationItem.rightBarButtonItem = nil
+                }
+                
                 self.tableView.reloadData()
             }
         }
@@ -79,8 +94,36 @@ class GovDetailViewController: UITableViewController, XMLParserDelegate {
         task.resume()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    @IBAction func review(_ sender: Any) {
+        let reviewVC = self.storyboard?.instantiateViewController(withIdentifier: "govReviewController") as! GovReviewViewController
+        
+        reviewVC.flow = item
+        
+        reviewVC.submitHandler = {
+            (controller) in
+            
+            print("Gonna dismiss Review controller")
+            
+            let words = controller?.wordsTextView.text
+            
+            if let button = controller?.reviewButton.selectedButtons()[0] {
+                
+                switch button.tag {
+                case 0:
+                    self.sumbit(reviewWords: words!)
+                case 2:
+                    self.finalize(reviewWords: words!)
+                default:
+                    self.sumbit(reviewWords: words!)
+                }
+                
+                controller?.dismiss(animated: true, completion: nil)
+            }
+        }
+        
+        //        print("Remark in item: \(self.item?.remark)")
+        
+        self.present(reviewVC, animated: true, completion: nil)
     }
     
     
@@ -131,11 +174,11 @@ class GovDetailViewController: UITableViewController, XMLParserDelegate {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return "Basic Info"
+            return "基本信息"
         case 1:
-            return "Attachment"
+            return "附件"
         case 2:
-            return "Progress"
+            return "审批进度"
         default:
             return ""
         }
@@ -178,10 +221,131 @@ class GovDetailViewController: UITableViewController, XMLParserDelegate {
         }
     }
     
+
+    func sumbit(reviewWords: String) {
+        
+        guard let user = Repository.sharedInstance.user
+            else {
+                print("Failed to get user object")
+                return
+        }
+        
+        let parameters = "<token>\(user.token)</token>"
+            + "<id>\(self.item!.id)</id>"
+            + "<words>\(reviewWords)</words>"
+            + "<depName>\(self.item!.depName)</depName>"
+            + "<currentDocPath>\(self.item!.currentDocPath)</currentDocPath>"
+            + "<flowFiles>\(self.item!.flowFiles)</flowFiles>"
+        
+        let request = SoapHelper.getURLRequest(method: soapMethodAgreed, parameters: parameters)
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print("network error: \(error)")
+                return
+            }
+            
+            let parser = XMLParser(data: data)
+            parser.delegate = self
+            guard parser.parse() else {
+                print("parsing error: \(parser.parserError)")
+                return
+            }
+            
+            // if we've gotten here, update the UI
+            DispatchQueue.main.async {
+                
+                if let result = self.reviewResult {
+                    if result.result != 1 {
+                        let controller = UIAlertController(
+                            title: "操作失败，稍后请重试。如果问题依然存在，请联系管理员。",
+                            message: "", preferredStyle: .alert)
+                        
+                        let cancelAction = UIAlertAction(
+                            title: "Ok",
+                            style: .cancel, handler: nil)
+                        
+                        controller.addAction(cancelAction)
+                        
+                        self.present(controller, animated: true, completion: nil)
+                        
+                        return
+                    }
+                    
+                    self.submitHandler!(self)
+                }
+            }
+        }
+        
+        task.resume()
+    }
+    
+    func finalize(reviewWords: String) {
+        
+        guard let user = Repository.sharedInstance.user
+            else {
+                print("Failed to get user object")
+                return
+        }
+        
+        let parameters = "<token>\(user.token)</token>"
+            + "<id>\(self.item!.id)</id>"
+            + "<words>\(reviewWords)</words>"
+            + "<depName>\(self.item!.depName)</depName>"
+            + "<currentDocPath>\(self.item!.currentDocPath)</currentDocPath>"
+            + "<flowFiles>\(self.item!.flowFiles)</flowFiles>"
+        
+        let request = SoapHelper.getURLRequest(method: soapMethodFinalized, parameters: parameters)
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print("network error: \(error)")
+                return
+            }
+            
+            let parser = XMLParser(data: data)
+            parser.delegate = self
+            guard parser.parse() else {
+                print("parsing error: \(parser.parserError)")
+                return
+            }
+            
+            // if we've gotten here, update the UI
+            DispatchQueue.main.async {
+                
+                if let result = self.reviewResult {
+                    if result.result != 1 {
+                        let controller = UIAlertController(
+                            title: "操作失败，稍后请重试。如果问题依然存在，请联系管理员。",
+                            message: "", preferredStyle: .alert)
+                        
+                        let cancelAction = UIAlertAction(
+                            title: "Ok",
+                            style: .cancel, handler: nil)
+                        
+                        controller.addAction(cancelAction)
+                        
+                        self.present(controller, animated: true, completion: nil)
+                        
+                        return
+                    }
+                    
+                    self.submitHandler!(self)
+                }
+            }
+        }
+        
+        task.resume()
+    }
+    
+
     // MARK: - XML Parser
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
-        if elementName == "\(soapMethod)Result" {
+        if elementName == "\(soapMethod)Result"
+            || elementName == "\(soapMethodAgreed)Result"
+            || elementName == "\(soapMethodFinalized)Result"
+        {
             elementValue = ""
         }
     }
@@ -211,6 +375,36 @@ class GovDetailViewController: UITableViewController, XMLParserDelegate {
             if let s = self.item?.steps {
                 self.steps = s
             }
+            
+            elementValue = nil;
+        }
+        else if elementName == "\(soapMethodAgreed)Result" {
+            print(elementValue ?? "Not got any data from ws.")
+            
+            let result = convertStringToDictionary(text: elementValue!)
+            print(result ?? "Not got any data from ws.")
+            
+            guard let resultObject = ResponseBase(json: result!) else {
+                print("DECODING FAILURE :(")
+                return
+            }
+            
+            self.reviewResult = resultObject
+            
+            elementValue = nil;
+        }
+        else if elementName == "\(soapMethodFinalized)Result" {
+            print(elementValue ?? "Not got any data from ws.")
+            
+            let result = convertStringToDictionary(text: elementValue!)
+            print(result ?? "Not got any data from ws.")
+            
+            guard let resultObject = ResponseBase(json: result!) else {
+                print("DECODING FAILURE :(")
+                return
+            }
+            
+            self.reviewResult = resultObject
             
             elementValue = nil;
         }
