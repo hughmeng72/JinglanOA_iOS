@@ -212,6 +212,10 @@ class FlowDetailViewController: UITableViewController, XMLParserDelegate {
                     return
                 }
                 
+                if (!self.item!.approvalAuthorized) {
+                    self.navigationItem.rightBarButtonItem = nil
+                }
+                
                 self.tableView.reloadData()
             }
         }

@@ -24,6 +24,11 @@ class GovGeneralTableViewController: UITableViewController, XMLParserDelegate {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 48
         
+        load()
+    }
+    
+    func load() {
+        
         guard let user = Repository.sharedInstance.user
             else {
                 print("Failed to get user object")
