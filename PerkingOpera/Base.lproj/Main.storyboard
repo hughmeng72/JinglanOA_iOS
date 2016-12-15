@@ -239,7 +239,7 @@
                                                         </label>
                                                     </subviews>
                                                 </stackView>
-                                                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GEd-sQ-KZh" userLabel="Budget Stack View">
+                                                <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GEd-sQ-KZh" userLabel="Budget Stack View">
                                                     <rect key="frame" x="0.0" y="7031.5" width="288" height="164"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="nLJ-FS-0EE" userLabel="B-Title Stack View">
@@ -422,6 +422,7 @@
                                     <outlet property="amountLeftLabel" destination="8LQ-pH-F4G" id="hyd-Ax-SXk"/>
                                     <outlet property="amountPaidProcurementLabel" destination="rB7-sv-Knd" id="pcA-O2-6W1"/>
                                     <outlet property="amountPaidReimbursementLabel" destination="2HQ-5h-bjP" id="6fj-6Z-fwD"/>
+                                    <outlet property="budgetStackView" destination="GEd-sQ-KZh" id="3XD-rN-ZkD"/>
                                     <outlet property="createDateLabel" destination="ljh-HR-cSW" id="6GS-91-Tm9"/>
                                     <outlet property="creatorLabel" destination="cft-hW-bDt" id="gR8-Zi-Xr0"/>
                                     <outlet property="depNameLabel" destination="agI-JN-jTm" id="aab-MC-l4G"/>
@@ -483,7 +484,7 @@
                             <outlet property="delegate" destination="VXW-Yh-t4R" id="Fxb-1w-25o"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Flow Detail" id="9OZ-4M-LRp" userLabel="Flow Detail">
+                    <navigationItem key="navigationItem" title="申请单" id="9OZ-4M-LRp" userLabel="Flow Detail">
                         <barButtonItem key="rightBarButtonItem" systemItem="compose" id="PVW-Oa-CAT">
                             <connections>
                                 <action selector="review:" destination="VXW-Yh-t4R" id="FL4-zi-iC4"/>
@@ -588,7 +589,7 @@
             </objects>
             <point key="canvasLocation" x="2955" y="2562"/>
         </scene>
-        <!--Flow Finance Table View Controller-->
+        <!--财务申请单-->
         <scene sceneID="wgG-6e-9vf">
             <objects>
                 <tableViewController id="cCX-Vl-RCp" customClass="FlowFinanceTableViewController" customModule="PerkingOpera" customModuleProvider="target" sceneMemberID="viewController">
@@ -666,12 +667,13 @@
                             <outlet property="delegate" destination="cCX-Vl-RCp" id="sma-fv-xTZ"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="财务申请单" id="TsP-Yd-t3Y"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bt1-0W-Z0a" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3609.375" y="1000.3521126760563"/>
         </scene>
-        <!--Flow General Table View Controller-->
+        <!--一般申请单-->
         <scene sceneID="yPj-qA-ryX">
             <objects>
                 <tableViewController id="C3M-Da-pzB" customClass="FlowGeneralTableViewController" customModule="PerkingOpera" customModuleProvider="target" sceneMemberID="viewController">
@@ -749,6 +751,7 @@
                             <outlet property="delegate" destination="C3M-Da-pzB" id="Lew-0U-pTI"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="一般申请单" id="B92-if-qFE"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8jV-Gv-Fl6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -837,7 +840,7 @@
             </objects>
             <point key="canvasLocation" x="-981" y="260"/>
         </scene>
-        <!--Main View Controller-->
+        <!--首页-->
         <scene sceneID="Gpu-7x-eIO">
             <objects>
                 <viewController id="UzN-BA-mdB" customClass="MainViewController" customModule="PerkingOpera" customModuleProvider="target" sceneMemberID="viewController">
@@ -1115,7 +1118,7 @@
                             <constraint firstItem="WVK-bU-zFy" firstAttribute="top" secondItem="QTA-Jd-OoL" secondAttribute="top" id="pHm-Kq-Lmf"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="0Fm-IP-wDU"/>
+                    <navigationItem key="navigationItem" title="首页" id="0Fm-IP-wDU"/>
                     <connections>
                         <segue destination="CHm-lN-etL" kind="show" identifier="showNoticeList" id="HCP-3A-xIl"/>
                         <segue destination="kO6-k1-6WL" kind="show" identifier="showMailList" id="YOo-73-w8F"/>
@@ -1680,7 +1683,7 @@
             </objects>
             <point key="canvasLocation" x="1084" y="2837"/>
         </scene>
-        <!--Flow to do-->
+        <!--待审批申请单-->
         <scene sceneID="RDv-rZ-AJb">
             <objects>
                 <tableViewController id="JjC-fc-nv6" customClass="FlowToDoTableViewController" customModule="PerkingOpera" customModuleProvider="target" sceneMemberID="viewController">
@@ -1759,7 +1762,7 @@
                         </connections>
                     </tableView>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Flow to do" id="OUV-0B-UWN"/>
+                    <navigationItem key="navigationItem" title="待审批申请单" id="OUV-0B-UWN"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OeD-TC-rJy" userLabel="First Responder" sceneMemberID="firstResponder"/>

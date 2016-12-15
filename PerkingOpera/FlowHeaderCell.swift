@@ -40,4 +40,6 @@ class FlowHeaderCell: UITableViewCell {
     
     @IBOutlet weak var amountPaidReimbursementLabel: UILabel!
     
+    @IBOutlet weak var budgetStackView: UIStackView!
+    
 }

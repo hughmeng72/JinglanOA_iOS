@@ -72,11 +72,11 @@ class ReviewViewController: UIViewController, XMLParserDelegate {
         }
 
         for button in self.reviewButton.selectedButtons() {
-            if button.tag == 1 {
-                self.submitHandler!(self)
+            if button.tag == 0 {
+                checkReviewers()
             }
             else {
-                checkReviewers()
+                self.submitHandler!(self)
             }
         }
     }

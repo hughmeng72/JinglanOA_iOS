@@ -15,6 +15,8 @@ class FlowDetailViewController: UITableViewController, XMLParserDelegate {
     
     private let soapMethod = "GetFlowDetail"
     private let soapMethodAgreed = "SubmitFlowRequest"
+    private let soapMethodDisagreed = "RejectFlowRequest"
+    private let soapMethodFinalized = "FinalizeFlowRequest"
     
     private var elementValue: String?
     
@@ -27,6 +29,7 @@ class FlowDetailViewController: UITableViewController, XMLParserDelegate {
     private var reviewResult: ResponseBase?
 
     var submitHandler: ((FlowDetailViewController?) -> Void)?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,12 +53,24 @@ class FlowDetailViewController: UITableViewController, XMLParserDelegate {
             
             let words = controller?.wordsTextView.text
             
-            controller?.dismiss(animated: true, completion: nil)
-            
-            self.sumbit(reviewWords: words!)
+            if let button = controller?.reviewButton.selectedButtons()[0] {
+
+                switch button.tag {
+                case 0:
+                    self.sumbit(reviewWords: words!)
+                case 1:
+                    self.reject(reviewWords: words!)
+                case 2:
+                    self.finalize(reviewWords: words!)
+                default:
+                    self.sumbit(reviewWords: words!)
+                }
+                
+                controller?.dismiss(animated: true, completion: nil)
+            }
         }
 
-        print("Remark in item: \(self.item?.remark)")
+//        print("Remark in item: \(self.item?.remark)")
         
         self.present(reviewVC, animated: true, completion: nil)
     }
@@ -136,14 +151,21 @@ class FlowDetailViewController: UITableViewController, XMLParserDelegate {
 //                cell.remarkLabel.text = item.remark
                 cell.remarkLabel.attributedText = HtmlHelper.stringFromHtml(string: self.item?.remark)
 
-                cell.itemNameLabel.text = item.itemName
-                cell.projectNameLabel.text = item.projectName
-                cell.totalAmountLabel.text = "\(item.totalAmount)"
-                cell.amountLeftLabel.text = "\(item.amountLeft)"
-                cell.amountBeingPaidProcurementLabel.text = "\(item.amountToBePaidProcurement)"
-                cell.amountPaidProcurementLabel.text = "\(item.amountPaidProcurement)"
-                cell.amountBeingPaidReimbursementLabel.text = "\(item.amountToBePaidReimbursement)"
-                cell.amountPaidReimbursementLabel.text = "\(item.amountPaidReimbursement)"
+                if item.budgetInvolved && item.budgetAuthorized && item.modelName != "采购申请" {
+                    cell.budgetStackView.isHidden = false
+                    
+                    cell.itemNameLabel.text = item.itemName
+                    cell.projectNameLabel.text = item.projectName
+                    cell.totalAmountLabel.text = "\(item.totalAmount)"
+                    cell.amountLeftLabel.text = "\(item.amountLeft)"
+                    cell.amountBeingPaidProcurementLabel.text = "\(item.amountToBePaidProcurement)"
+                    cell.amountPaidProcurementLabel.text = "\(item.amountPaidProcurement)"
+                    cell.amountBeingPaidReimbursementLabel.text = "\(item.amountToBePaidReimbursement)"
+                    cell.amountPaidReimbursementLabel.text = "\(item.amountPaidReimbursement)"
+                }
+                else {
+                    cell.budgetStackView.isHidden = true
+                }
             }
             
             return cell
@@ -282,11 +304,133 @@ class FlowDetailViewController: UITableViewController, XMLParserDelegate {
         task.resume()
     }
     
+    func reject(reviewWords: String) {
+        
+        guard let user = Repository.sharedInstance.user
+            else {
+                print("Failed to get user object")
+                return
+        }
+        
+        let parameters = "<token>\(user.token)</token>"
+            + "<id>\(self.item!.id)</id>"
+            + "<words>\(reviewWords)</words>"
+            + "<depName>\(self.item!.depName)</depName>"
+            + "<docBody>\(self.item!.docBody)</docBody>"
+            + "<currentDocPath>\(self.item!.currentDocPath)</currentDocPath>"
+            + "<flowFiles>\(self.item!.flowFiles)</flowFiles>"
+        
+        let request = SoapHelper.getURLRequest(method: soapMethodDisagreed, parameters: parameters)
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print("network error: \(error)")
+                return
+            }
+            
+            let parser = XMLParser(data: data)
+            parser.delegate = self
+            guard parser.parse() else {
+                print("parsing error: \(parser.parserError)")
+                return
+            }
+            
+            // if we've gotten here, update the UI
+            DispatchQueue.main.async {
+                
+                if let result = self.reviewResult {
+                    if result.result != 1 {
+                        let controller = UIAlertController(
+                            title: "操作失败，稍后请重试。如果问题依然存在，请联系管理员。",
+                            message: "", preferredStyle: .alert)
+                        
+                        let cancelAction = UIAlertAction(
+                            title: "Ok",
+                            style: .cancel, handler: nil)
+                        
+                        controller.addAction(cancelAction)
+                        
+                        self.present(controller, animated: true, completion: nil)
+                        
+                        return
+                    }
+                    
+                    self.submitHandler!(self)
+                }
+            }
+        }
+        
+        task.resume()
+    }
+    
+    func finalize(reviewWords: String) {
+        
+        guard let user = Repository.sharedInstance.user
+            else {
+                print("Failed to get user object")
+                return
+        }
+        
+        let parameters = "<token>\(user.token)</token>"
+            + "<id>\(self.item!.id)</id>"
+            + "<words>\(reviewWords)</words>"
+            + "<depName>\(self.item!.depName)</depName>"
+            + "<docBody>\(self.item!.docBody)</docBody>"
+            + "<currentDocPath>\(self.item!.currentDocPath)</currentDocPath>"
+            + "<flowFiles>\(self.item!.flowFiles)</flowFiles>"
+        
+        let request = SoapHelper.getURLRequest(method: soapMethodFinalized, parameters: parameters)
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print("network error: \(error)")
+                return
+            }
+            
+            let parser = XMLParser(data: data)
+            parser.delegate = self
+            guard parser.parse() else {
+                print("parsing error: \(parser.parserError)")
+                return
+            }
+            
+            // if we've gotten here, update the UI
+            DispatchQueue.main.async {
+                
+                if let result = self.reviewResult {
+                    if result.result != 1 {
+                        let controller = UIAlertController(
+                            title: "操作失败，稍后请重试。如果问题依然存在，请联系管理员。",
+                            message: "", preferredStyle: .alert)
+                        
+                        let cancelAction = UIAlertAction(
+                            title: "Ok",
+                            style: .cancel, handler: nil)
+                        
+                        controller.addAction(cancelAction)
+                        
+                        self.present(controller, animated: true, completion: nil)
+                        
+                        return
+                    }
+                    
+                    self.submitHandler!(self)
+                }
+            }
+        }
+        
+        task.resume()
+    }
+    
     
     // MARK: - XML Parser for Flow Detail
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
-        if elementName == "\(soapMethod)Result" || elementName == "\(soapMethodAgreed)Result" {
+        if elementName == "\(soapMethod)Result"
+            || elementName == "\(soapMethodAgreed)Result"
+            || elementName == "\(soapMethodDisagreed)Result"
+            || elementName == "\(soapMethodFinalized)Result"
+        {
             elementValue = ""
         }
     }
@@ -320,6 +464,36 @@ class FlowDetailViewController: UITableViewController, XMLParserDelegate {
             elementValue = nil;
         }
         else if elementName == "\(soapMethodAgreed)Result" {
+            print(elementValue ?? "Not got any data from ws.")
+            
+            let result = convertStringToDictionary(text: elementValue!)
+            print(result ?? "Not got any data from ws.")
+            
+            guard let resultObject = ResponseBase(json: result!) else {
+                print("DECODING FAILURE :(")
+                return
+            }
+            
+            self.reviewResult = resultObject
+            
+            elementValue = nil;
+        }
+        else if elementName == "\(soapMethodDisagreed)Result" {
+            print(elementValue ?? "Not got any data from ws.")
+            
+            let result = convertStringToDictionary(text: elementValue!)
+            print(result ?? "Not got any data from ws.")
+            
+            guard let resultObject = ResponseBase(json: result!) else {
+                print("DECODING FAILURE :(")
+                return
+            }
+            
+            self.reviewResult = resultObject
+            
+            elementValue = nil;
+        }
+        else if elementName == "\(soapMethodFinalized)Result" {
             print(elementValue ?? "Not got any data from ws.")
             
             let result = convertStringToDictionary(text: elementValue!)
