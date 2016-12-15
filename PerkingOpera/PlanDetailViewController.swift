@@ -33,7 +33,7 @@ class PlanDetailViewController: UIViewController, WKNavigationDelegate, UITableV
         let url = URL(string: self.urlString)
         let request = URLRequest(url: url!)
         
-        webView = WKWebView(frame: container.frame)
+        webView = WKWebView(frame: self.view.frame)
         webView?.navigationDelegate = self
         let _ = webView?.load(request)
         container.addSubview(webView!)
