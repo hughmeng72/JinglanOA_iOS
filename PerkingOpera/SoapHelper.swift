@@ -10,8 +10,8 @@ import Foundation
 
 class SoapHelper {
 //    private static let host = "http://192.168.9.31/"
-//    private static let host = "http://test.freight-track.com/"
-    private static let host = "http://www.jjyoa.com:8000/"
+    private static let host = "http://test.freight-track.com/"
+//    private static let host = "http://www.jjyoa.com:8000/"
     
 //    private static let requestUrl = "\(host)WebUI/WebService/Perkingopera.asmx"
     private static let requestUrl = "\(host)WebService/Perkingopera.asmx"
