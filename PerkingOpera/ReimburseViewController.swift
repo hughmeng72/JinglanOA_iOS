@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Alamofire
+import DLRadioButton
 
 class ReimburseViewController: UIViewController, UINavigationControllerDelegate,  UIImagePickerControllerDelegate {
     
@@ -16,6 +18,7 @@ class ReimburseViewController: UIViewController, UINavigationControllerDelegate,
     
     @IBOutlet weak var Pic3ImageView: UIImageView!
     
+    @IBOutlet var paymentTermButton: DLRadioButton!
 
     // MARK: - View life cycle
     
@@ -36,6 +39,13 @@ class ReimburseViewController: UIViewController, UINavigationControllerDelegate,
                 "FileName": "test1.png",
                 "image_data": base64String
             ]
+            
+            Alamofire.request(SoapHelper.uploadUrl, method: .post, parameters: parameters)
+                .responseData(completionHandler: {
+                (response) in
+                print(response.result)
+            })
+            
         }
         
     }

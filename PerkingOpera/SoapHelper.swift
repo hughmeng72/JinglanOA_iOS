@@ -16,6 +16,8 @@ class SoapHelper {
 //    private static let requestUrl = "\(host)WebUI/WebService/Perkingopera.asmx"
     private static let requestUrl = "\(host)WebService/Perkingopera.asmx"
     
+    static let uploadUrl = "\(host)WebService/Pages/UploadPhoto.aspx"
+    
     
     static func getURLRequest(method: String, parameters: String) -> URLRequest {
         let bodyString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +

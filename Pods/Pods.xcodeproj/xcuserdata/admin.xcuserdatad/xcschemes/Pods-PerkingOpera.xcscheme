@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0810"
+   LastUpgradeVersion = "0700"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0567050A4D6D9F2B8A8DD36B8417E588"
+               BlueprintIdentifier = "8B9ABEA3FE49E6776F364274C47148CA"
                BuildableName = "Pods_PerkingOpera.framework"
                BlueprintName = "Pods-PerkingOpera"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0567050A4D6D9F2B8A8DD36B8417E588"
+            BlueprintIdentifier = "8B9ABEA3FE49E6776F364274C47148CA"
             BuildableName = "Pods_PerkingOpera.framework"
             BlueprintName = "Pods-PerkingOpera"
             ReferencedContainer = "container:Pods.xcodeproj">
