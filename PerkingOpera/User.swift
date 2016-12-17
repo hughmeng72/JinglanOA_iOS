@@ -35,7 +35,7 @@ struct User: Glossy {
         self.userName = userName
         self.depId = depId
         self.realName = "RealName" <~~ json
-        self.depName = "depName" <~~ json
+        self.depName = "DepName" <~~ json
         self.error = error
     }
     

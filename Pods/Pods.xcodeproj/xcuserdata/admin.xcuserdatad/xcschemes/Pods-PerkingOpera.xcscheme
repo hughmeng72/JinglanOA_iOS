@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8B9ABEA3FE49E6776F364274C47148CA"
+               BlueprintIdentifier = "8C0BF22CE86A0DC8D612C795EBCD8B74"
                BuildableName = "Pods_PerkingOpera.framework"
                BlueprintName = "Pods-PerkingOpera"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8B9ABEA3FE49E6776F364274C47148CA"
+            BlueprintIdentifier = "8C0BF22CE86A0DC8D612C795EBCD8B74"
             BuildableName = "Pods_PerkingOpera.framework"
             BlueprintName = "Pods-PerkingOpera"
             ReferencedContainer = "container:Pods.xcodeproj">

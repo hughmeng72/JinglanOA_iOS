@@ -1,18 +1,21 @@
 PODS:
   - Alamofire (4.2.0)
   - DLRadioButton (1.4.9)
+  - DropDown (2)
   - Gloss (1.1.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.0)
   - DLRadioButton (~> 1.4)
+  - DropDown
   - Gloss (~> 1.1)
 
 SPEC CHECKSUMS:
   Alamofire: aa2e09d871c9160ac53c90e83c68064a94e3dfbe
   DLRadioButton: 7bb8a6e3768b572469ace553391ab4d2af6f9c19
+  DropDown: 744784d9c9aa505100e942c16acd05430cbb2f0a
   Gloss: a8340c124ff69c5d1c12e06c252373f4a16d2958
 
-PODFILE CHECKSUM: 51565b5382e06e95d3b237ff14e68d68ddfa60ae
+PODFILE CHECKSUM: 8d550ded18e08d9f53d2be904a889b4b05388505
 
 COCOAPODS: 1.1.1
