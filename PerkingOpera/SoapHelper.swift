@@ -16,6 +16,7 @@ class SoapHelper {
 //    private static let requestUrl = "\(host)WebUI/WebService/Perkingopera.asmx"
     private static let requestUrl = "\(host)WebService/Perkingopera.asmx"
     
+//    static let uploadUrl = "http://www.jjyoa.com:8000/WebService/Pages/UploadPhoto.aspx"
     static let uploadUrl = "\(host)WebService/Pages/UploadPhoto.aspx"
     
     

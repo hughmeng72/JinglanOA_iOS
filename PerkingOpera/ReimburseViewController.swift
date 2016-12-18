@@ -35,7 +35,7 @@ class ReimburseViewController: UIViewController, XMLParserDelegate, UINavigation
     let itemDropDown = DropDown()
     
     private let soapMethod = "GetBudgetItems"
-    private let soapMethodSubmit = "SubmitFlowRequest"
+    private let soapMethodSubmit = "SaveFlow"
     
     var elementValue: String?
     
@@ -339,7 +339,7 @@ class ReimburseViewController: UIViewController, XMLParserDelegate, UINavigation
                         return
                     }
                     
-//                    self.navigationController?.popViewController(animated: true)
+                    self.navigationController?.popViewController(animated: true)
                 }
             }
         }
