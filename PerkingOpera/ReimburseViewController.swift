@@ -12,7 +12,7 @@ import Alamofire
 import DLRadioButton
 import DropDown
 
-class ReimburseViewController: UIViewController, XMLParserDelegate, UINavigationControllerDelegate,  UIImagePickerControllerDelegate {
+class ReimburseViewController: UIViewController, XMLParserDelegate, UITextFieldDelegate,  UINavigationControllerDelegate,  UIImagePickerControllerDelegate {
     
     @IBOutlet weak var formNameTextField: UITextField!
     
@@ -31,6 +31,9 @@ class ReimburseViewController: UIViewController, XMLParserDelegate, UINavigation
     @IBOutlet var paymentTermButton: DLRadioButton!
     
     @IBOutlet weak var itemButton: DropDownButton!
+    
+    @IBOutlet weak var picStackView: UIStackView!
+    
     
     let itemDropDown = DropDown()
     
@@ -61,9 +64,11 @@ class ReimburseViewController: UIViewController, XMLParserDelegate, UINavigation
         
         setupItemDropDown()
 
-        registerDismissKeyboardEvent()
+        setupPicViewBorder()
+        
+        setupKeyboard()
     }
-    
+
     func loadBudgetItems() {
         guard let user = Repository.sharedInstance.user
             else {
@@ -115,11 +120,56 @@ class ReimburseViewController: UIViewController, XMLParserDelegate, UINavigation
         itemDropDown.direction = .any
     }
 
+    func setupPicViewBorder() {
+        
+        let borderView = UIView(frame: CGRect.zero)
+        borderView.translatesAutoresizingMaskIntoConstraints = false
+        borderView.layer.borderColor = UIColor.gray.cgColor
+        borderView.layer.borderWidth = 1.0
+        
+        picStackView.addSubview(borderView)
+        
+        let borderViewConstraints: [NSLayoutConstraint] = [
+            borderView.topAnchor.constraint(equalTo: picStackView.topAnchor),
+            borderView.leadingAnchor.constraint(equalTo: picStackView.leadingAnchor),
+            borderView.trailingAnchor.constraint(equalTo: picStackView.trailingAnchor),
+            borderView.bottomAnchor.constraint(equalTo: picStackView.bottomAnchor),
+            ]
+        
+        NSLayoutConstraint.activate(borderViewConstraints)
+    }
+    
+    func setupKeyboard() {
+        
+        self.formNameTextField.delegate = self
+        self.remarkTextField.delegate = self
+        self.amountTextField.delegate = self
+        
+        registerDismissKeyboardEvent()
+        
+        self.formNameTextField.becomeFirstResponder()
+    }
+    
     // Dismiss keyboard when user click anyplace else
     func registerDismissKeyboardEvent() {
         let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
         tap.cancelsTouchesInView = false
         self.view.addGestureRecognizer(tap)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        if textField == self.formNameTextField {
+            self.remarkTextField.becomeFirstResponder()
+        }
+        else if textField == self.remarkTextField {
+            self.amountTextField.becomeFirstResponder()
+        }
+        else {
+            textField.resignFirstResponder()
+        }
+        
+        return true
     }
     
     
@@ -134,9 +184,9 @@ class ReimburseViewController: UIViewController, XMLParserDelegate, UINavigation
     
     @IBAction func submit(_ sender: Any) {
         
-//        if !isValidated() {
-//            return
-//        }
+        if !isValidated() {
+            return
+        }
         
         update()
     }
@@ -339,7 +389,8 @@ class ReimburseViewController: UIViewController, XMLParserDelegate, UINavigation
                         return
                     }
                     
-                    self.navigationController?.popViewController(animated: true)
+                    // Suppresses the warning
+                    _ = self.navigationController?.popViewController(animated: true)
                 }
             }
         }
@@ -371,21 +422,38 @@ class ReimburseViewController: UIViewController, XMLParserDelegate, UINavigation
         
         // Get picked image from info dictionary
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
+//        let fixOrientationImage = image.fixOrientation()
         
         // Put that image onto the screen in our image view
         if Pic1ImageView.image == nil {
             Pic1ImageView.image = image
+
+//            Pic1ImageView.contentMode = .scaleAspectFill
+//            Pic1ImageView.image = fixOrientationImage
         }
         else if Pic2ImageView.image == nil {
             Pic2ImageView.image = image
+
+//            Pic2ImageView.contentMode = .scaleAspectFill
+//            Pic2ImageView.image = fixOrientationImage
         }
         else {
             Pic3ImageView.image = image
+
+//            Pic3ImageView.contentMode = .scaleAspectFill
+//            Pic3ImageView.image = fixOrientationImage
         }
         
         // Take image picker off the screen -
         dismiss(animated: true, completion: nil)
     }
+
+    @IBAction func clearPictures(_ sender: Any) {
+        self.Pic1ImageView.image = nil;
+        self.Pic2ImageView.image = nil;
+        self.Pic3ImageView.image = nil;
+    }
+    
     
     
     // MARK: - XML Parser
@@ -444,5 +512,68 @@ class ReimburseViewController: UIViewController, XMLParserDelegate, UINavigation
         }
         
         return nil
+    }
+}
+
+//MARK:- Image Orientation fix
+
+extension UIImage {
+    
+    func fixOrientation() -> UIImage {
+        
+        // No-op if the orientation is already correct
+        if ( self.imageOrientation == UIImageOrientation.up ) {
+            return self;
+        }
+        
+        // We need to calculate the proper transformation to make the image upright.
+        // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
+        var transform: CGAffineTransform = CGAffineTransform.identity
+        
+        if ( self.imageOrientation == UIImageOrientation.down || self.imageOrientation == UIImageOrientation.downMirrored ) {
+            transform = transform.translatedBy(x: self.size.width, y: self.size.height)
+            transform = transform.rotated(by: CGFloat(M_PI))
+        }
+        
+        if ( self.imageOrientation == UIImageOrientation.left || self.imageOrientation == UIImageOrientation.leftMirrored ) {
+            transform = transform.translatedBy(x: self.size.width, y: 0)
+            transform = transform.rotated(by: CGFloat(M_PI_2))
+        }
+        
+        if ( self.imageOrientation == UIImageOrientation.right || self.imageOrientation == UIImageOrientation.rightMirrored ) {
+            transform = transform.translatedBy(x: 0, y: self.size.height);
+            transform = transform.rotated(by: CGFloat(-M_PI_2));
+        }
+        
+        if ( self.imageOrientation == UIImageOrientation.upMirrored || self.imageOrientation == UIImageOrientation.downMirrored ) {
+            transform = transform.translatedBy(x: self.size.width, y: 0)
+            transform = transform.scaledBy(x: -1, y: 1)
+        }
+        
+        if ( self.imageOrientation == UIImageOrientation.leftMirrored || self.imageOrientation == UIImageOrientation.rightMirrored ) {
+            transform = transform.translatedBy(x: self.size.height, y: 0);
+            transform = transform.scaledBy(x: -1, y: 1);
+        }
+        
+        // Now we draw the underlying CGImage into a new context, applying the transform
+        // calculated above.
+        let ctx: CGContext = CGContext(data: nil, width: Int(self.size.width), height: Int(self.size.height),
+                                       bitsPerComponent: self.cgImage!.bitsPerComponent, bytesPerRow: 0,
+                                       space: self.cgImage!.colorSpace!,
+                                       bitmapInfo: self.cgImage!.bitmapInfo.rawValue)!;
+        
+        ctx.concatenate(transform)
+        
+        if ( self.imageOrientation == UIImageOrientation.left ||
+            self.imageOrientation == UIImageOrientation.leftMirrored ||
+            self.imageOrientation == UIImageOrientation.right ||
+            self.imageOrientation == UIImageOrientation.rightMirrored ) {
+            ctx.draw(self.cgImage!, in: CGRect(x: 0,y: 0,width: self.size.height,height: self.size.width))
+        } else {
+            ctx.draw(self.cgImage!, in: CGRect(x: 0,y: 0,width: self.size.width,height: self.size.height))
+        }
+        
+        // And now we just create a new UIImage from the drawing context and return it
+        return UIImage(cgImage: ctx.makeImage()!)
     }
 }
