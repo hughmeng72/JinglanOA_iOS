@@ -10,8 +10,8 @@ import Foundation
 
 class SoapHelper {
 //    private static let host = "http://192.168.9.31/"                              // Debug in Home
-    private static let host = "http://test.freight-track.com/"                      // Dedug in ECNU
-//    private static let host = "http://www.jjyoa.com:8000/"                        // Production
+//    private static let host = "http://test.freight-track.com/"                      // Dedug in ECNU
+    private static let host = "http://www.jjyoa.com:8000/"                        // Production
     
 //    private static let requestUrl = "\(host)WebUI/WebService/Perkingopera.asmx"   // Debug in Home
     private static let requestUrl = "\(host)WebService/Perkingopera.asmx"           // Production or ECNU
