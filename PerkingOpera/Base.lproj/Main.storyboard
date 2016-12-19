@@ -8,6 +8,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -71,11 +72,16 @@
                                 <rect key="frame" x="201" y="269" width="51" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </switch>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="zzS-mg-17e">
+                                <rect key="frame" x="150" y="331" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="zzS-mg-17e" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="9Xr-Jx-BUm"/>
                             <constraint firstItem="DSj-ua-SFR" firstAttribute="width" secondItem="2be-Ku-jLc" secondAttribute="width" id="CUr-ON-3oP"/>
                             <constraint firstItem="j4y-tn-0lV" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="120" id="NA4-CS-X29"/>
+                            <constraint firstItem="zzS-mg-17e" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" multiplier="0.618" id="Sf3-sw-HaE"/>
                             <constraint firstItem="j4y-tn-0lV" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="T4s-Ff-7WH"/>
                             <constraint firstItem="2be-Ku-jLc" firstAttribute="leading" secondItem="j4y-tn-0lV" secondAttribute="leading" id="acF-wE-hOQ"/>
                             <constraint firstItem="2be-Ku-jLc" firstAttribute="centerX" secondItem="j4y-tn-0lV" secondAttribute="centerX" id="eTT-FM-fUh"/>
@@ -88,6 +94,8 @@
                     <connections>
                         <outlet property="Password" destination="2be-Ku-jLc" id="Z1s-UJ-Lja"/>
                         <outlet property="UserName" destination="j4y-tn-0lV" id="t7i-uA-rau"/>
+                        <outlet property="activityIndicator" destination="zzS-mg-17e" id="NFJ-bv-mj0"/>
+                        <outlet property="loginButton" destination="DSj-ua-SFR" id="mso-WA-ORw"/>
                         <outlet property="savePassword" destination="tp8-fr-Egq" id="qCv-VT-ZUs"/>
                         <segue destination="sEV-rR-u52" kind="show" identifier="showMain" id="PMu-EQ-sPz"/>
                     </connections>
@@ -647,7 +655,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yyu-f2-0Vn">
-                                            <rect key="frame" x="128" y="29" width="31" height="15"/>
+                                            <rect key="frame" x="128.5" y="29" width="31" height="15"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -731,7 +739,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Zv-IU-EE6">
-                                            <rect key="frame" x="128" y="28" width="31" height="15"/>
+                                            <rect key="frame" x="128.5" y="28" width="31" height="15"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -1073,7 +1081,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wg0-WZ-61q">
-                                            <rect key="frame" x="128" y="28.5" width="31" height="15"/>
+                                            <rect key="frame" x="128.5" y="28.5" width="31" height="15"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -1861,7 +1869,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ti4-8Y-8dT">
-                                            <rect key="frame" x="128" y="28" width="31" height="15"/>
+                                            <rect key="frame" x="128.5" y="28" width="31" height="15"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -2011,7 +2019,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="00y-7J-PBU">
-                                            <rect key="frame" x="128" y="44.5" width="31" height="15"/>
+                                            <rect key="frame" x="128.5" y="44.5" width="31" height="15"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>

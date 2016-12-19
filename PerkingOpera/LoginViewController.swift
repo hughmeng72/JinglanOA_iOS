@@ -21,6 +21,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate, XMLParserDeleg
     
     @IBOutlet weak var savePassword: UISwitch!
     
+    @IBOutlet weak var loginButton: UIButton!
+    
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,6 +73,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, XMLParserDeleg
     
     @IBAction func Login(_ sender: Any) {
         
+        self.loginButton.isEnabled = false
+        self.activityIndicator.startAnimating()
+        
         let userName = UserName.text!
         let password = Password.text!
         
@@ -92,6 +99,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate, XMLParserDeleg
             
             // if we've gotten here, update the UI
             DispatchQueue.main.async {
+                
+                self.loginButton.isEnabled = true
+                self.activityIndicator.stopAnimating()
+                
                 if let user = Repository.sharedInstance.user, user.error.result == 1 {
                     UserDefaults.standard.set(self.savePassword.isOn, forKey: "SavePassword")
                     
