@@ -34,6 +34,10 @@ class ReimburseViewController: UIViewController, XMLParserDelegate, UITextFieldD
     
     @IBOutlet weak var picStackView: UIStackView!
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+
+    @IBOutlet weak var submitButton: UIButton!
+
     
     let itemDropDown = DropDown()
     
@@ -243,6 +247,9 @@ class ReimburseViewController: UIViewController, XMLParserDelegate, UITextFieldD
     
     func update() {
         
+        self.submitButton.isEnabled = false
+        self.activityIndicator.startAnimating()
+        
         uploadImage1()
         
     }
@@ -270,6 +277,9 @@ class ReimburseViewController: UIViewController, XMLParserDelegate, UITextFieldD
                     case .success:
                         self.uploadImage2()
                     case .failure(let error):
+                        self.submitButton.isEnabled = true
+                        self.activityIndicator.stopAnimating()
+                        
                         print("Uploading failed: \(error)")
                     }
                 })
@@ -300,6 +310,9 @@ class ReimburseViewController: UIViewController, XMLParserDelegate, UITextFieldD
                     case .success:
                         self.uploadImage3()
                     case .failure(let error):
+                        self.submitButton.isEnabled = true
+                        self.activityIndicator.stopAnimating()
+
                         print("Uploading failed: \(error)")
                     }
                     
@@ -331,6 +344,9 @@ class ReimburseViewController: UIViewController, XMLParserDelegate, UITextFieldD
                     case .success:
                         self.uploadRequest()
                     case .failure(let error):
+                        self.submitButton.isEnabled = true
+                        self.activityIndicator.stopAnimating()
+
                         print("Uploading failed: \(error)")
                     }
                     
@@ -381,6 +397,8 @@ class ReimburseViewController: UIViewController, XMLParserDelegate, UITextFieldD
             
             // if we've gotten here, update the UI
             DispatchQueue.main.async {
+                self.submitButton.isEnabled = true
+                self.activityIndicator.stopAnimating()
                 
                 if let result = self.saveResult {
                     if result.result != 1 {

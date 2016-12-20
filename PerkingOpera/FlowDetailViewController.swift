@@ -11,6 +11,8 @@ import UIKit
 
 class FlowDetailViewController: UITableViewController, XMLParserDelegate {
     
+    weak var activityIndicatorView: UIActivityIndicatorView!
+    
     var itemId: Int!
     
     private let soapMethod = "GetFlowDetail"
@@ -37,7 +39,10 @@ class FlowDetailViewController: UITableViewController, XMLParserDelegate {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 48
         
-        load()
+        let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+        tableView.backgroundView = activityIndicatorView
+        
+        self.activityIndicatorView = activityIndicatorView
     }
 
     @IBAction func review(_ sender: Any) {
@@ -191,7 +196,18 @@ class FlowDetailViewController: UITableViewController, XMLParserDelegate {
 
     // MARK: - Load Flow detail information
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if self.item == nil {
+            load()
+        }
+    }
+    
     func load() {
+
+        self.activityIndicatorView.startAnimating()
+        
         guard let user = Repository.sharedInstance.user
             else {
                 print("Failed to get user object")
@@ -218,6 +234,9 @@ class FlowDetailViewController: UITableViewController, XMLParserDelegate {
             
             // if we've gotten here, update the UI
             DispatchQueue.main.async {
+
+                self.activityIndicatorView.stopAnimating()
+                
                 if self.item == nil {
                     let controller = UIAlertController(
                         title: "没有检索到相关数据",

@@ -11,11 +11,13 @@ import UIKit
 
 class FlowGeneralTableViewController: UITableViewController, XMLParserDelegate {
     
+    weak var activityIndicatorView: UIActivityIndicatorView!
+    
     private let soapMethod = "GetGeneralFlowList"
     
     var elementValue: String?
     
-    var list: [Flow] = []
+    var list: [Flow]! = nil
     
     
     override func viewDidLoad() {
@@ -24,10 +26,26 @@ class FlowGeneralTableViewController: UITableViewController, XMLParserDelegate {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 48
         
-        load()
+        let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+        tableView.backgroundView = activityIndicatorView
+        
+        self.activityIndicatorView = activityIndicatorView
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if self.list == nil {
+            load()
+        }
+        else {
+            self.tableView.reloadData()
+        }
     }
     
     func load() {
+
+        self.activityIndicatorView.startAnimating()
         
         guard let user = Repository.sharedInstance.user
             else {
@@ -55,6 +73,13 @@ class FlowGeneralTableViewController: UITableViewController, XMLParserDelegate {
             
             // if we've gotten here, update the UI
             DispatchQueue.main.async {
+
+                self.activityIndicatorView.stopAnimating()
+                
+                if self.list == nil {
+                    self.list = []
+                }
+                
                 if self.list.count == 0 {
                     let controller = UIAlertController(
                         title: "没有检索到相关数据",
@@ -82,7 +107,7 @@ class FlowGeneralTableViewController: UITableViewController, XMLParserDelegate {
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return list.count
+        return list == nil ? 0 : list.count
     }
     
     override func tableView(_ tableView: UITableView,

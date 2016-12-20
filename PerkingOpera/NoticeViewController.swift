@@ -11,42 +11,42 @@ import UIKit
 
 class NoticeViewController: UITableViewController, XMLParserDelegate {
 
+    weak var activityIndicatorView: UIActivityIndicatorView!
+    
     private let soapMethod = "GetNoticeList"
     
     var elementValue: String?
     
-    var list: [Notice] = []
+    var list: [Notice]! = nil
     
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return list.count
-    }
-    
-    override func tableView(_ tableView: UITableView,
-                            cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath) as! ItemCell
-        let item = list[indexPath.row]
-        
-        cell.subjectLabel.text = item.title
-        cell.categoryLabel.text = item.typeName
-        cell.timeLabel.text = item.addTime
-       
-        return cell
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        // Get the height of the status bar
-//        let statusBarHeight = UIApplication.shared.statusBarFrame.height + 8
-//        
-//        let insets = UIEdgeInsets(top: statusBarHeight, left: 0, bottom: 0, right: 0)
-//        tableView.contentInset = insets
-//        tableView.scrollIndicatorInsets = insets
         
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 48
        
+        let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+        tableView.backgroundView = activityIndicatorView
+        
+        self.activityIndicatorView = activityIndicatorView
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if self.list == nil {
+            load()
+        }
+        else {
+            self.tableView.reloadData()
+        }
+    }
+    
+    func load() {
+        
+        self.activityIndicatorView.startAnimating()
+        
         guard let user = Repository.sharedInstance.user
             else {
                 print("Failed to get user object")
@@ -69,23 +69,30 @@ class NoticeViewController: UITableViewController, XMLParserDelegate {
                 print("parsing error: \(parser.parserError)")
                 return
             }
-        
+            
             // if we've gotten here, update the UI
             DispatchQueue.main.async {
+                
+                self.activityIndicatorView.stopAnimating()
+                
+                if self.list == nil {
+                    self.list = []
+                }
+                
                 if self.list.count == 0 {
-                        let controller = UIAlertController(
-                            title: "没有检索到相关数据",
-                            message: "", preferredStyle: .alert)
-                        
-                        let cancelAction = UIAlertAction(
-                            title: "Ok",
-                            style: .cancel, handler: nil)
-                        
-                        controller.addAction(cancelAction)
-                        
-                        self.present(controller, animated: true, completion: nil)
-                        
-                        return
+                    let controller = UIAlertController(
+                        title: "没有检索到相关数据",
+                        message: "", preferredStyle: .alert)
+                    
+                    let cancelAction = UIAlertAction(
+                        title: "Ok",
+                        style: .cancel, handler: nil)
+                    
+                    controller.addAction(cancelAction)
+                    
+                    self.present(controller, animated: true, completion: nil)
+                    
+                    return
                 }
                 
                 self.tableView.reloadData()
@@ -94,11 +101,24 @@ class NoticeViewController: UITableViewController, XMLParserDelegate {
         
         task.resume()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        return list == nil ? 0 : list.count
     }
+    
+    override func tableView(_ tableView: UITableView,
+                            cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath) as! ItemCell
+        let item = list[indexPath.row]
+        
+        cell.subjectLabel.text = item.title
+        cell.categoryLabel.text = item.typeName
+        cell.timeLabel.text = item.addTime
+        
+        return cell
+    }
+    
     
     // MARK: - Navigation
     

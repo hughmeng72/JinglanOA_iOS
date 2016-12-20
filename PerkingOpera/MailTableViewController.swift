@@ -11,19 +11,41 @@ import UIKit
 
 class MailTableViewController: UITableViewController, XMLParserDelegate {
 
+    weak var activityIndicatorView: UIActivityIndicatorView!
+    
     private let soapMethod = "GetMailList"
     
-    var elementValue: String?
+    private var elementValue: String?
     
-    var list: [Mail] = []
+    private var list: [Mail]! = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-//        self.clearsSelectionOnViewWillAppear = false
-
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 48
+        
+        let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+        tableView.backgroundView = activityIndicatorView
+        
+        self.activityIndicatorView = activityIndicatorView
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if self.list == nil {
+            load()
+        }
+        else {
+            self.tableView.reloadData()
+        }
+    }
+    
+    
+    func load() {
+        
+        self.activityIndicatorView.startAnimating()
         
         guard let user = Repository.sharedInstance.user
             else {
@@ -50,6 +72,13 @@ class MailTableViewController: UITableViewController, XMLParserDelegate {
             
             // if we've gotten here, update the UI
             DispatchQueue.main.async {
+
+                self.activityIndicatorView.stopAnimating()
+                
+                if self.list == nil {
+                    self.list = []
+                }
+                
                 if self.list.count == 0 {
                     let controller = UIAlertController(
                         title: "没有检索到相关数据",
@@ -72,7 +101,27 @@ class MailTableViewController: UITableViewController, XMLParserDelegate {
         
         task.resume()
     }
+
     
+    // MARK: - Table view data source
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        return list == nil ? 0 : list.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath) as! ItemCell
+        let item = list[indexPath.row]
+        
+        cell.subjectLabel.text = item.subject
+        cell.categoryLabel.text = item.creator
+        cell.timeLabel.text = item.sendTime
+        
+        return cell
+    }
+    
+
     // MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -127,38 +176,4 @@ class MailTableViewController: UITableViewController, XMLParserDelegate {
         return nil
     }
     
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    // MARK: - Table view data source
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return list.count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath) as! ItemCell
-        let item = list[indexPath.row]
-        
-        cell.subjectLabel.text = item.subject
-        cell.categoryLabel.text = item.creator
-        cell.timeLabel.text = item.sendTime
-        
-        return cell
-    }
-
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

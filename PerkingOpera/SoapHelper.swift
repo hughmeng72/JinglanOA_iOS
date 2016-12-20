@@ -10,20 +10,20 @@ import Foundation
 
 class SoapHelper {
 
-    // Debug at home
+//    Debug at home
 //    private static let host = "http://192.168.9.31/"
 //    private static let requestUrl = "\(host)WebUI/WebService/Perkingopera.asmx"
 //    static let uploadUrl = "\(host)WebUI/WebService/Pages/UploadPhoto.aspx"
 
-    // Debug in ECNU
-    private static let host = "http://test.freight-track.com/"
-    private static let requestUrl = "\(host)WebService/Perkingopera.asmx"
-    static let uploadUrl = "\(host)WebService/Pages/UploadPhoto.aspx"
-
-    // Production
-//    private static let host = "http://www.jjyoa.com:8000/"
+//    Debug in ECNU
+//    private static let host = "http://test.freight-track.com/"
 //    private static let requestUrl = "\(host)WebService/Perkingopera.asmx"
 //    static let uploadUrl = "\(host)WebService/Pages/UploadPhoto.aspx"
+
+//    ***** Production ******
+    private static let host = "http://www.jjyoa.com:8000/"
+    private static let requestUrl = "\(host)WebService/Perkingopera.asmx"
+    static let uploadUrl = "\(host)WebService/Pages/UploadPhoto.aspx"
     
     
     static func getURLRequest(method: String, parameters: String) -> URLRequest {

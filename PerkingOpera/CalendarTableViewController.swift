@@ -11,11 +11,13 @@ import UIKit
 
 class CalendarTableViewController: UITableViewController, XMLParserDelegate {
 
+    weak var activityIndicatorView: UIActivityIndicatorView!
+    
     private let soapMethod = "GetCalendarList"
     
     var elementValue: String?
     
-    var list: [Calendar] = []
+    var list: [Calendar]! = nil
 
     
     override func viewDidLoad() {
@@ -23,7 +25,10 @@ class CalendarTableViewController: UITableViewController, XMLParserDelegate {
         
         setViewHeights()
         
-        load()
+        let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+        tableView.backgroundView = activityIndicatorView
+        
+        self.activityIndicatorView = activityIndicatorView
     }
     
     func setViewHeights() {
@@ -44,7 +49,21 @@ class CalendarTableViewController: UITableViewController, XMLParserDelegate {
         tableView.estimatedRowHeight = 64
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if self.list == nil {
+            load()
+        }
+        else {
+            self.tableView.reloadData()
+        }
+    }
+    
     func load() {
+        
+        self.activityIndicatorView.startAnimating()
+        
         guard let user = Repository.sharedInstance.user
             else {
                 print("Failed to get user object")
@@ -71,6 +90,13 @@ class CalendarTableViewController: UITableViewController, XMLParserDelegate {
             
             // if we've gotten here, update the UI
             DispatchQueue.main.async {
+
+                self.activityIndicatorView.stopAnimating()
+                
+                if self.list == nil {
+                    self.list = []
+                }
+                
                 if self.list.count == 0 {
                     let controller = UIAlertController(
                         title: "没有检索到相关数据",
@@ -94,16 +120,12 @@ class CalendarTableViewController: UITableViewController, XMLParserDelegate {
         task.resume()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return list.count
+
+        return list == nil ? 0 : list.count
     }
 
     override func tableView(_ tableView: UITableView,
@@ -122,14 +144,6 @@ class CalendarTableViewController: UITableViewController, XMLParserDelegate {
     // MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "showCalendar" {
-//            if let row = tableView.indexPathForSelectedRow?.row {
-//                let item = list[row]
-//                let webController = segue.destination as! WebViewController
-//                
-//                webController.urlString = item.url
-//            }
-//        }
 
         if segue.identifier == "showCalendar" {
             if let row = tableView.indexPathForSelectedRow?.row {
